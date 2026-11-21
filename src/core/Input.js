@@ -6,6 +6,7 @@ export class Input {
     this.mouseDX = 0;
     this.mouseDY = 0;
     this.pointerLocked = false;
+    this.fallbackMouse = false;
     this.onKeyDown = (event) => {
       if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.code)) event.preventDefault();
       if (!event.repeat) this.callbacks.keydown?.(event);
@@ -13,15 +14,19 @@ export class Input {
     };
     this.onKeyUp = (event) => { this.keys.delete(event.code); };
     this.onMouseMove = (event) => {
-      if (this.pointerLocked) { this.mouseDX += event.movementX; this.mouseDY += event.movementY; }
+      if (this.pointerLocked || (this.fallbackMouse && this.canvas.matches(':hover'))) {
+        this.mouseDX += event.movementX;
+        this.mouseDY += event.movementY;
+      }
     };
     this.onPointerChange = () => {
       this.pointerLocked = document.pointerLockElement === this.canvas;
+      if (this.pointerLocked) this.fallbackMouse = false;
       this.callbacks.pointerlock?.(this.pointerLocked);
     };
     this.onMouseDown = (event) => {
       event.preventDefault();
-      if (!this.pointerLocked) { this.canvas.requestPointerLock?.(); return; }
+      if (!this.pointerLocked && !this.fallbackMouse) { this.canvas.requestPointerLock?.(); return; }
       this.callbacks.mousedown?.(event.button);
     };
     this.onContext = (event) => event.preventDefault();
@@ -33,6 +38,7 @@ export class Input {
     canvas.addEventListener('contextmenu', this.onContext);
     window.addEventListener('blur', () => this.keys.clear());
   }
+  setFallbackMouse(enabled) { this.fallbackMouse = enabled && !this.pointerLocked; }
   isDown(code) { return this.keys.has(code); }
   consumeMouseDelta() { const dx = this.mouseDX; const dy = this.mouseDY; this.mouseDX = 0; this.mouseDY = 0; return { dx, dy }; }
   dispose() {

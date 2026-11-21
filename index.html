@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101923">
+  <title>Voxel Walk</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js" } }
+  </script>
+</head>
+<body>
+  <main id="game" aria-label="Voxel Walk game">
+    <canvas id="game-canvas" aria-label="3D voxel world"></canvas>
+    <section class="hud" aria-live="polite">
+      <div class="world-stats"><strong>Voxel Walk</strong><span id="chunk-count">Chunks: 0</span><span id="fps">FPS: --</span></div>
+      <div class="controls-hint">WASD move · Space jump · Mouse look · Left break · Right place · E inventory · Esc release mouse</div>
+      <div class="crosshair" aria-hidden="true"><i></i><b></b></div>
+      <div id="hotbar" class="hotbar" aria-label="Hotbar"></div>
+      <div id="inventory-panel" class="inventory-panel" hidden aria-label="Inventory"></div>
+      <div id="start-prompt" class="start-prompt"><div><h1>Voxel Walk</h1><p>Explore a procedurally generated world.</p><button id="play-button" type="button">Click to play</button><small>WASD · Space to jump · E for inventory</small></div></div>
+    </section>
+  </main>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

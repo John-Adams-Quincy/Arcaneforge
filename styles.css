@@ -1,0 +1,41 @@
+* { box-sizing: border-box; }
+:root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+html, body, #game { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #101923; }
+body { user-select: none; }
+#game { position: relative; }
+#game-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.hud { position: absolute; inset: 0; pointer-events: none; color: #fff; text-shadow: 0 2px 4px #000b; }
+.world-stats { position: absolute; top: max(16px, env(safe-area-inset-top)); left: max(18px, env(safe-area-inset-left)); display: grid; gap: 4px; padding: 11px 14px; border: 1px solid #ffffff20; border-radius: 9px; background: #101923a8; font-size: 13px; }
+.world-stats strong { font-size: 17px; letter-spacing: .03em; }
+.controls-hint { position: absolute; top: max(20px, env(safe-area-inset-top)); right: max(18px, env(safe-area-inset-right)); max-width: 46%; text-align: right; font-size: 12px; color: #ffffffd9; }
+.crosshair { position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; transform: translate(-50%, -50%); filter: drop-shadow(0 1px 2px #000); }
+.crosshair i, .crosshair b { position: absolute; display: block; background: #fff; border-radius: 1px; }
+.crosshair i { width: 2px; height: 14px; left: 7px; top: 1px; }
+.crosshair b { height: 2px; width: 14px; left: 1px; top: 7px; }
+.hotbar { position: absolute; left: 50%; bottom: max(22px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: flex; gap: 4px; padding: 5px; border: 1px solid #ffffff80; border-radius: 8px; background: #111820bd; pointer-events: auto; }
+.slot { position: relative; width: 48px; height: 48px; display: grid; place-items: center; border: 2px solid #ffffff38; border-radius: 5px; background: #ffffff14; cursor: pointer; color: white; }
+.slot.selected { border-color: #fff; background: #ffffff35; box-shadow: 0 0 0 1px #111; }
+.slot .swatch { width: 25px; height: 25px; border: 1px solid #ffffff8a; box-shadow: inset -4px -4px #0002; image-rendering: pixelated; }
+.slot .slot-label { position: absolute; left: 4px; top: 2px; color: #ffffffb8; font-size: 9px; }
+.slot .block-name { position: absolute; right: 3px; bottom: 1px; font-size: 8px; color: #fff; }
+.inventory-panel { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(490px, calc(100vw - 28px)); padding: 18px; border: 1px solid #ffffff7a; border-radius: 12px; background: #18232df2; box-shadow: 0 18px 70px #0009; pointer-events: auto; }
+.inventory-panel h2 { margin: 0 0 14px; font-size: 18px; }
+.inventory-panel .grid { display: grid; grid-template-columns: repeat(9, minmax(30px, 1fr)); gap: 5px; }
+.inventory-panel .slot { width: 100%; height: auto; aspect-ratio: 1; }
+.inventory-panel .hint { margin: 14px 0 0; color: #ffffffa8; font-size: 12px; }
+.start-prompt { position: absolute; inset: 0; display: grid; place-items: center; background: #08111a68; pointer-events: auto; text-align: center; }
+.start-prompt[hidden] { display: none; }
+.start-prompt > div { width: min(390px, calc(100vw - 34px)); padding: 30px; border: 1px solid #ffffff55; border-radius: 14px; background: #101923e8; box-shadow: 0 12px 50px #0008; }
+.start-prompt h1 { margin: 0 0 7px; font-size: 30px; }
+.start-prompt p { margin: 0 0 20px; color: #d3dae0; }
+.start-prompt button { padding: 11px 20px; border: 0; border-radius: 7px; background: #85c95b; color: #142012; font: inherit; font-weight: 700; cursor: pointer; }
+.start-prompt small { display: block; margin-top: 16px; color: #b7c1ca; }
+@media (max-width: 650px) {
+  .controls-hint { top: auto; right: 10px; bottom: 94px; max-width: 50%; font-size: 10px; }
+  .world-stats { top: 10px; left: 10px; padding: 8px 10px; font-size: 11px; }
+  .world-stats strong { font-size: 14px; }
+  .hotbar { gap: 2px; padding: 4px; bottom: max(12px, env(safe-area-inset-bottom)); }
+  .slot { width: min(9vw, 42px); height: min(9vw, 42px); }
+  .inventory-panel { padding: 12px; }
+  .inventory-panel .grid { gap: 3px; }
+}

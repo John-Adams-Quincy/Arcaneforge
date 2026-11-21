@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * * as THREE from 'three';
 import { Input } from './Input.js';
 import { BLOCK, REACH } from './Constants.js';
 import { World } from '../world/World.js';
@@ -22,8 +22,29 @@ export class Game {
     this.outline = new OutlineRenderer(this.renderer.scene); this.hit = null; this.rayDirection = new THREE.Vector3();
     this.modified = new Map(saved?.modified ?? []); this.applyDeltas();
     this.input = new Input(canvas, { keydown: (event) => this.onKey(event), mousedown: (button) => this.onMouse(button), pointerlock: (locked) => this.onPointerLock(locked) });
-    this.startPrompt = document.querySelector('#start-prompt'); document.querySelector('#play-button').addEventListener('click', () => canvas.requestPointerLock?.());
+    this.startPrompt = document.querySelector('#start-prompt');
+    document.querySelector('#play-button').addEventListener('click', () => this.play());
     this.lastTime = 0; this.running = false; this.boundFrame = (time) => this.frame(time);
+  }
+  play() {
+    const enableFallback = () => {
+      if (document.pointerLockElement === this.canvas) return;
+      this.input.setFallbackMouse(true);
+      this.startPrompt.hidden = true;
+    };
+
+    if (typeof this.canvas.requestPointerLock !== 'function') {
+      enableFallback();
+      return;
+    }
+
+    try {
+      const request = this.canvas.requestPointerLock();
+      if (request && typeof request.catch === 'function') request.catch(enableFallback);
+      window.setTimeout(enableFallback, 500);
+    } catch {
+      enableFallback();
+    }
   }
   applyDeltas() {
     for (const [key, type] of this.modified) {
@@ -60,7 +81,10 @@ export class Game {
     if (event.code === 'Escape' && this.inventoryUI.open) this.inventoryUI.toggle(false);
     if (/^Digit[1-9]$/.test(event.code)) { this.inventory.select(Number(event.code.slice(5)) - 1); this.inventoryUI.render(); this.scheduleSave(); }
   }
-  onPointerLock(locked) { this.startPrompt.hidden = locked || this.inventoryUI.open; if (!locked && !this.inventoryUI.open) this.startPrompt.hidden = false; }
+  onPointerLock(locked) {
+    if (locked) this.input.setFallbackMouse(false);
+    this.startPrompt.hidden = locked || this.inventoryUI.open || (!locked && this.input.fallbackMouse);
+  }
   onMouse(button) {
     if (!this.hit) return;
     if (button === 0) { this.world.setBlock(this.hit.x, this.hit.y, this.hit.z, BLOCK.AIR); this.modified.set(`${this.hit.x},${this.hit.y},${this.hit.z}`, BLOCK.AIR); this.scheduleSave(); }

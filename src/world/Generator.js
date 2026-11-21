@@ -27,7 +27,7 @@ export class Generator {
   }
   biomeWeights(x, z) {
     const field = this.valueNoise(x, z, 180, 8101);
-    const mountain = smooth(Math.max(0, Math.min(1, (field + 0.05) * 2.1));
+    const mountain = smooth(Math.max(0, Math.min(1, (field + 0.05) * 2.1)));
     const forestField = this.valueNoise(x, z, 110, 3299);
     const forest = Math.max(0, Math.min(1, (1 - mountain) * smooth((forestField + 0.2) * 1.8)));
     return { plains: Math.max(0, 1 - mountain - forest), forest, mountain };
